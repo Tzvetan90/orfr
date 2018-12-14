@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jul 12 15:51:06 2015
+
+@author: Stefano
+"""
+from Bio.Alphabet import IUPAC
+from Bio.Seq import translate, Seq
+from re import finditer
+with open('rosalind_orfr.txt','r') as inp:
+    coding_dna=Seq(inp.read().replace('\n',''), IUPAC.unambiguous_dna)
+    reverse_coding_dna=coding_dna.reverse_complement()
+    longest_coded_dna=sorted([translate(coding_dna[i.start():],to_stop=True) for i in finditer('ATG',str(coding_dna))],key=len)[-1]
+    longest_coded_reverse_dna=sorted([translate(reverse_coding_dna[i.start():],to_stop=True) for i in finditer('ATG',str(reverse_coding_dna))],key=len)[-1]
+    longest=longest_coded_dna if len(longest_coded_dna)>=len(longest_coded_reverse_dna) else longest_coded_reverse_dna
+with open('outputorfr.txt','w') as out:
+    out.write(str(longest))
